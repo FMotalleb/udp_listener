@@ -36,11 +36,15 @@ to quickly create a Cobra application.`,
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {},
 }
+var AllowedUDPClients []string = make([]string, 0)
 var BasicAuth string = ""
 var ListenAddr string = ""
 var UDPListenPort uint16 = 0
 var TCPListenPort uint16 = 0
+var UDPBufferSize uint16 = 0
+
 var Zero string = ""
+var Verbose bool
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -55,7 +59,12 @@ func init() {
 	rootCmd.Flags().StringVarP(&ListenAddr, "listen-addr", "l", "0.0.0.0", "listen ip address")
 	rootCmd.Flags().Uint16VarP(&TCPListenPort, "http-port", "p", 8080, "listen http port")
 	rootCmd.Flags().Uint16VarP(&UDPListenPort, "udp-port", "u", 7982, "listen udp port")
+	rootCmd.Flags().Uint16VarP(&UDPBufferSize, "udp-buffer-size", "b", 2048, "udp packet buffer size")
 
 	rootCmd.Flags().StringVar(&BasicAuth, "user", "", "http basic authentication")
 	rootCmd.Flags().StringVar(&Zero, "zero", "", "value to accept as zero")
+	rootCmd.Flags().BoolVarP(&Verbose, "verbose", "v", false, "sets logger to be more verbose")
+
+	rootCmd.Flags().StringSliceVar(&AllowedUDPClients, "allowd-udp-clients", make([]string, 0), "allow udp connection from these addressess")
+
 }

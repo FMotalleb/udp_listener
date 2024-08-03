@@ -1,6 +1,8 @@
 package valueholder
 
 import (
+	"fmt"
+	"log/slog"
 	"sync"
 	"time"
 )
@@ -32,6 +34,7 @@ func (v *ValueHolder) String() string {
 func (v *ValueHolder) ToMap() map[string]any {
 	return map[string]any{
 		"value":       v.String(),
+		"is_zero":     v.String() == v.zero,
 		"last_update": v.lastUpdate.Format(time.RFC3339),
 		"last_zero":   v.lastZero.Format(time.RFC3339),
 	}
@@ -40,6 +43,7 @@ func (v *ValueHolder) ToMap() map[string]any {
 func (v *ValueHolder) Write(p []byte) (n int, err error) {
 	v.lock.Lock()
 	defer v.lock.Unlock()
+	slog.Debug(fmt.Sprintf("rewrite value: `%s` from client", string(p)))
 	v.data = p
 	v.lastUpdate = time.Now()
 	if string(v.data) == v.zero {

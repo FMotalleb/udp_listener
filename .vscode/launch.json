@@ -14,7 +14,10 @@
         "--user",
         "admin:admin",
         "--zero",
-        "\n"
+        "\n",
+        "--verbose",
+        "--allowd-udp-clients",
+        "127.0.0.1"
       ]
     }
   ]
