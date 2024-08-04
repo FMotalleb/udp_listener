@@ -24,11 +24,11 @@ func StartHttpServer(value *vh.ValueHolder) error {
 		)
 	}
 	server.GET(
-		"api/v1/wight/current",
+		"api/v1/state/current",
 		func(g *gin.Context) {
 			g.JSON(200, map[string]any{
 				"code":    1,
-				"message": "Weight fetched Successfully",
+				"message": "",
 				"data":    value.ToMap(),
 			})
 		},
