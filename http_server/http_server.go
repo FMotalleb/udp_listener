@@ -5,14 +5,17 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/FMotalleb/udp_listener/cmd"
 	vh "github.com/FMotalleb/udp_listener/value_holder"
 	"github.com/gin-gonic/gin"
 )
 
-func StartHttpServer(value *vh.ValueHolder) error {
+// StartHttpServer starts an HTTP server that serves the current state of the given valueHolder.
+// It uses the Gin web framework and listens on the specified address and port.
+// If basic authentication is enabled (providing a user:pass to cli), it requires a valid username and password.
+// The server responds to GET requests at the "/api/v1/state/current" endpoint with the current state of the system.
+func StartHttpServer(serveAddr string, auth string, valueHolder *vh.ValueHolder) error {
 	server := gin.New()
-	if auth := strings.Split(cmd.BasicAuth, ":"); len(auth) == 2 {
+	if auth := strings.Split(auth, ":"); len(auth) == 2 {
 		user := auth[0]
 		pass := auth[1]
 		server.Use(
@@ -29,11 +32,11 @@ func StartHttpServer(value *vh.ValueHolder) error {
 			g.JSON(200, map[string]any{
 				"code":    1,
 				"message": "",
-				"data":    value.ToMap(),
+				"data":    valueHolder.ToMap(),
 			})
 		},
 	)
-	err := server.Run(fmt.Sprintf("%s:%d", cmd.ListenAddr, cmd.TCPListenPort))
+	err := server.Run(serveAddr)
 	if err != nil {
 		slog.Error(fmt.Sprintf("http server fatal error: %s", err))
 		return err
