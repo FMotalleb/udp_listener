@@ -1,6 +1,6 @@
 module github.com/FMotalleb/udp_listener
 
-go 1.22.5
+go 1.22.6
 
 require (
 	github.com/gin-gonic/gin v1.10.0
